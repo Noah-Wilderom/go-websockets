@@ -2,6 +2,8 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/Noah-Wilderom/go-websockets/utils"
 	"github.com/gorilla/websocket"
 	"log"
 	"time"
@@ -22,6 +24,7 @@ const (
 )
 
 type Worker struct {
+	id      string
 	pool    *Pool
 	conn    *websocket.Conn
 	payload chan []byte
@@ -56,7 +59,7 @@ func (worker *Worker) WritePump() {
 				log.Println(err)
 			}
 
-			writer.Write([]byte(job.id))
+			writer.Write([]byte(fmt.Sprintf("Dispatched job %v", job.Id)))
 
 			n := len(worker.payload)
 			for i := 0; i < n; i++ {
@@ -107,6 +110,8 @@ func (worker *Worker) ReadPump() {
 		if err != nil {
 			log.Println(err)
 		}
+
+		utils.PrintWithTime(fmt.Sprintf("Worker %v has dispatched job %v", worker.id, job.Id))
 		worker.pool.dispatch <- payload
 	}
 }

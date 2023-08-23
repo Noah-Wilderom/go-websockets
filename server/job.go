@@ -1,6 +1,6 @@
 package server
 
 type Job struct {
-	id   string `json:"id"`
-	name string `json:"name"`
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
