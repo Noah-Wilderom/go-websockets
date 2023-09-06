@@ -10,6 +10,13 @@ import (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+
+	CheckOrigin: func(r *http.Request) bool {
+            // Replace "example.com" with your Laravel application's domain
+            allowedOrigin := "http://localhost"
+            origin := r.Header.Get("Origin")
+            return origin == allowedOrigin
+    	},
 }
 
 func Serve(pool *Pool, writer http.ResponseWriter, request *http.Request) {
